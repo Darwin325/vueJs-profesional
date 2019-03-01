@@ -1,9 +1,36 @@
-<template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
+<template lang="pug">
 
-  </div>
+   .container
+     nav.level
+        // Left side
+        .level-left
+           .level-item
+              p.subtitle.is-5
+                 strong 123
+                 |  posts
+           .level-item
+              .field.has-addons
+                 p.control
+                    input.input(
+                      type='text',
+                      placeholder='Find a post'
+                    )
+                 p.control
+                    button.button
+                       | Search
+        // Right side
+        .level-right
+           p.level-item
+              strong All
+           p.level-item
+              a Published
+           p.level-item
+              a Drafts
+           p.level-item
+              a Deleted
+           p.level-item
+              a.button.is-success New
+
 </template>
 
 <script>
@@ -11,7 +38,7 @@ export default {
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Hola vue'
     }
   }
 }
@@ -19,4 +46,9 @@ export default {
 
 <style lang="scss">
   @import "./scss/main";
+
+   .color{
+      color: azure;
+   }
+
 </style>
