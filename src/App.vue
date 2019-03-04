@@ -1,54 +1,101 @@
-<template lang="pug">
+<template>
+  <div id="app">
 
-   .container
-     nav.level
-        // Left side
-        .level-left
-           .level-item
-              p.subtitle.is-5
-                 strong 123
-                 |  posts
-           .level-item
-              .field.has-addons
-                 p.control
-                    input.input(
-                      type='text',
-                      placeholder='Find a post'
-                    )
-                 p.control
-                    button.button
-                       | Search
-        // Right side
-        .level-right
-           p.level-item
-              strong All
-           p.level-item
-              a Published
-           p.level-item
-              a Drafts
-           p.level-item
-              a Deleted
-           p.level-item
-              a.button.is-success New
+    <pm-header></pm-header>
 
+    <section class="section">
+      <nav class="nav has-shadow">
+        <div class="container">
+          <input
+            class="input is-large"
+            type="text"
+            placeholder="Buscar canciones"
+            v-model="searchQuery"
+          />
+          <a class="button is-info is-large" @click="search">Buscar</a>
+          <a class="button is-danger is-large">&times;</a>
+        </div>
+      </nav>
+
+      <div class="container">
+        <p>
+          <small>{{ searchMessage }}</small>
+        </p>
+      </div>
+
+      <div class="container results">
+        <div class="columns">
+          <div
+            v-for="t in tracks"
+            class="column"
+            :key="t.id"
+          >
+            {{ t.name }} - {{ t.artists[0].name }}
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <pm-footer></pm-footer>
+
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Hola vue'
+  import trackService from './services/track';
+  import PmFooter from './components/layuot/Footer';
+  import PmHeader from './components/layuot/Header';
+
+  export default {
+    name: 'app',
+
+    components: {
+      PmFooter,
+      PmHeader
+    },
+
+    data () {
+      return {
+        searchQuery: '',
+        tracks: [],
+      }
+    },
+
+    computed: {
+      searchMessage (){
+        return `Encontrados: ${this.tracks.length}`;
+      }
+    },
+
+    methods: {
+      search (){
+        if (! this.searchQuery){
+          return;
+        }
+
+        trackService.search(this.searchQuery)
+          .then(res =>{
+            this.tracks = res.tracks.items
+          });
+      }
+    },
+
+    created() {
+
     }
   }
-}
 </script>
 
 <style lang="scss">
   @import "./scss/main";
 
-   .color{
-      color: azure;
-   }
+  .color{
+    color: azure;
+  }
+
+  .results{
+    margin-top: 50px;
+  }
 
 </style>
