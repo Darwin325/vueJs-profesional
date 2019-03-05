@@ -3,8 +3,16 @@
 
     <pm-header></pm-header>
 
-    <section class="section">
-      <nav class="nav has-shadow">
+    <pm-notification v-show="showNotification">
+      <p slot="body">
+        No se enconraron resultados
+      </p>
+    </pm-notification>
+
+    <pm-loader v-show="isLoading"></pm-loader>
+
+    <section v-show="!isLoading" class="section">
+      <nav class="nav">
         <div class="container">
           <input
             class="input is-large"
@@ -24,13 +32,19 @@
       </div>
 
       <div class="container results">
-        <div class="columns">
+        <div class="columns is-multiline">
           <div
             v-for="t in tracks"
-            class="column"
+            class="column is-one-quarter"
             :key="t.id"
           >
-            {{ t.name }} - {{ t.artists[0].name }}
+            <pm-track
+              :class="{ 'is-active' : t.id == selectedTrack }"
+              :track="t"
+              @select="setSelectedTrack"
+            >
+
+            </pm-track>
           </div>
         </div>
       </div>
@@ -43,22 +57,35 @@
 </template>
 
 <script>
-  import trackService from './services/track';
-  import PmFooter from './components/layuot/Footer';
-  import PmHeader from './components/layuot/Header';
+  import trackService from '@/services/track';
+  import PmFooter from '@/components/layuot/Footer';
+  import PmHeader from '@/components/layuot/Header';
+
+  import PmTrack from '@/components/Track';
+
+  import PmLoader from '@/components/shared/loader';
+  import PmNotification from '@/components/shared/notification';
 
   export default {
     name: 'app',
 
     components: {
       PmFooter,
-      PmHeader
+      PmHeader,
+      PmTrack,
+      PmLoader,
+      PmNotification,
     },
 
     data () {
       return {
         searchQuery: '',
         tracks: [],
+
+        isLoading: false,
+
+        selectedTrack: '',
+        showNotification: false,
       }
     },
 
@@ -68,17 +95,35 @@
       }
     },
 
+    watch: {
+      showNotification(){
+        if (this.showNotification){
+          setTimeout(()=>{
+            this.showNotification = false;
+          }, 3000)
+        }
+      }
+    },
+
     methods: {
       search (){
         if (! this.searchQuery){
           return;
         }
+        this.isLoading = true;
 
         trackService.search(this.searchQuery)
           .then(res =>{
-            this.tracks = res.tracks.items
+            this.showNotification = res.tracks.total === 0;
+            this.tracks = res.tracks.items;
+            this.isLoading = false;
           });
+      },
+
+      setSelectedTrack(id){
+        this.selectedTrack = id;
       }
+
     },
 
     created() {
@@ -96,6 +141,10 @@
 
   .results{
     margin-top: 50px;
+  }
+
+  .is-active{
+    border: 2px #23d160 solid;
   }
 
 </style>
