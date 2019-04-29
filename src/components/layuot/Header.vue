@@ -10,7 +10,15 @@
             </div>
 
             <div class="navbar-end navbar-menu">
+              <!--Se puede llamar a la ruta con el nombre a traves de un objeto-->
+              <!--<router-link to="{ name: search }" class="navbar-item">-->
+              <router-link to="/" class="navbar-item">
+                Buscar
+              </router-link>
 
+              <router-link to="about" class="navbar-item">
+                Nosotros
+              </router-link>
             </div>
 
           </div>

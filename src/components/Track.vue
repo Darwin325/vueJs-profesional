@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div v-if="track && track.album" class="card">
     <div class="card-image">
       <figure class="image is-1by1">
         <img :src="track.album.images[0].url" alt="">
@@ -35,7 +35,17 @@
                   class="icon is-small"
                   @click="selectTrack"
                 >
-                  >>
+                  ▶️
+                </span>
+            </a>
+
+            <a href="#" class="level-item">
+                <span
+                  class="icon is-small"
+                  @click="goToTrack(track.id)"
+                  title="Detalles de la canción"
+                >
+                   Globe Showing Americas on Facebook
                 </span>
             </a>
           </div>
@@ -59,6 +69,10 @@
 
         this.$bus.$emit('set-track', this.track);
       },
+
+      goToTrack(id){
+        this.$router.push({ name: 'track', params: { id } })
+      }
     }
   }
 </script>
