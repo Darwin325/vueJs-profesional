@@ -4,9 +4,9 @@
         <header class="navbar">
           <div class="container">
             <div class="navbar-start">
-              <div class="navbar-item">
+              <router-link to="/" class="navbar-item">
                 <b>Platzi music</b>
-              </div>
+              </router-link>
             </div>
 
             <div class="navbar-end navbar-menu">

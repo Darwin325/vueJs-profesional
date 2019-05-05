@@ -1,13 +1,17 @@
 <template>
   <main>
 
-    <pm-notification v-show="showNotification">
-      <p slot="body">
-        No se enconraron resultados
-      </p>
-    </pm-notification>
+    <transition name="move">
+      <pm-notification v-show="showNotification">
+        <p slot="body">
+          No se enconraron resultados
+        </p>
+      </pm-notification>
+    </transition>
 
-    <pm-loader v-show="isLoading"></pm-loader>
+    <transition name="move">
+      <pm-loader v-show="isLoading"></pm-loader>
+    </transition>
 
     <section v-show="!isLoading" class="section">
       <nav class="nav">
@@ -38,6 +42,7 @@
             :key="t.id"
           >
             <pm-track
+              v-blur="t.preview_url"
               :class="{ 'is-active' : t.id == selectedTrack }"
               :track="t"
               @select="setSelectedTrack"

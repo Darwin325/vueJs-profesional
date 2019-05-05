@@ -27,27 +27,27 @@
       </div>
 
       <div class="content">
-        <small>{{ track.duration_ms }}</small>
+        <small>{{ track.duration_ms | ms-to-mm }}</small>
         <nav class="level">
           <div class="navbar-start">
-            <a href="#" class="level-item">
+            <button class="level-item button is-primary m-rigth">
                 <span
                   class="icon is-small"
                   @click="selectTrack"
                 >
                   ▶️
                 </span>
-            </a>
+            </button>
 
-            <a href="#" class="level-item">
+            <button class="level-item button is-warning">
                 <span
                   class="icon is-small"
                   @click="goToTrack(track.id)"
                   title="Detalles de la canción"
                 >
-                   Globe Showing Americas on Facebook
+                   🌎
                 </span>
-            </a>
+            </button>
           </div>
         </nav>
       </div>
@@ -56,21 +56,22 @@
 </template>
 
 <script>
+  import trackMixin from '@/mixins/track';
+
   export default {
     name: "Track",
+
+    mixins: [ trackMixin ],
 
     props: {
       track: {type: Object, required: true}
     },
 
     methods: {
-      selectTrack(){
-        this.$emit('select', this.track.id);
-
-        this.$bus.$emit('set-track', this.track);
-      },
-
       goToTrack(id){
+        if (!this.track.preview_url){
+          return;
+        }
         this.$router.push({ name: 'track', params: { id } })
       }
     }
@@ -79,4 +80,7 @@
 
 <style scoped>
 
+  .m-rigth{
+    margin-right: 15px;
+  }
 </style>
