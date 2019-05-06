@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="track && track.id">
     <div class="columns">
       <div class="column is-5 is-offset-4">
 
@@ -7,13 +7,13 @@
           <figure class="media-left">
 
             <p class="image">
-              <img :src="track.album.images[0].url" alt="">
+              <img :src="track.album.images[0].url">
             </p>
 
-            <p>
+            <p class="button-bar">
               <a class="button is-primary is-large" href="">
                 <span class="icon" @click="selectTrack">
-
+                  ▶️
                 </span>
               </a>
             </p>
@@ -26,7 +26,7 @@
 
             <div class="panel-heading">
               <h1 class="title">
-                {{ track.name }}
+                {{ trackTitle }}
               </h1>
             </div>
 
@@ -61,7 +61,7 @@
 
 <script>
 
-  import trackService from '@/services/track';
+  import { mapState, mapActions, mapGetters } from 'vuex';
   import trackMixin from '@/mixins/track';
 
   export default {
@@ -69,18 +69,25 @@
 
     mixins: [ trackMixin ],
 
-    data(){
-      return {
-        track: {}
-      }
+    computed: {
+      ...mapState(['track']),
+
+      ...mapGetters(['trackTitle']),
     },
 
     created() {
       const id = this.$route.params.id;
-      trackService.getById(id)
-        .then(res => {
-          this.track = res;
-        })
+
+      if (!this.track || !this.track.id || this.track.id !== id){
+        this.getTrackById({ id })
+          .then(() =>{
+            console.log('Ok');
+          })
+      }
+    },
+
+    methods: {
+      ...mapActions(['getTrackById']),
     }
   }
 </script>
@@ -88,5 +95,9 @@
 <style scoped lang="scss">
   .columns{
     margin: 20px;
+  }
+
+  .button-bar{
+    margin-top: 20px;
   }
 </style>
